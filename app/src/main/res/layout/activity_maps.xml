@@ -14,10 +14,9 @@
         android:gravity="center">
 
         <LinearLayout
-            android:layout_below="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="horizontal"
             android:gravity="center">
 
@@ -39,6 +38,31 @@
                 android:textSize="30sp"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/barometer_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_centerHorizontal="true"
+                android:textSize="20sp"
+                android:text="Start" />
+
+            <TextView
+                android:id="@+id/temperature_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textSize="20sp"
+                android:text="record" />
+        </LinearLayout>
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:map="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
@@ -49,14 +73,14 @@
             android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="10"
+            android:layout_weight="20"
             tools:context=".MapsActivity" />
 
         <LinearLayout
             android:layout_below="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="horizontal"
             android:gravity="center">
 

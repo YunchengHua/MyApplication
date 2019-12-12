@@ -42,6 +42,7 @@ public class Barometer {
         mSamplingRateInMSecs = (long) BAROMETER_READING_FREQUENCY;
         mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         mBarometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE);
+        latestValue = -1000;
         initBarometerListener();
     }
 
@@ -129,6 +130,8 @@ public class Barometer {
                 // probably already unregistered
             }
         }
+        latestValue = -1000;
+        lastReportTime = 0;
         setStarted(false);
     }
 

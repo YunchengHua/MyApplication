@@ -33,12 +33,14 @@ import uk.ac.shef.oak.com4510.database.LocAndSensorData;
 import uk.ac.shef.oak.com4510.model.Accelerometer;
 import uk.ac.shef.oak.com4510.model.Barometer;
 import uk.ac.shef.oak.com4510.model.MyMap;
+import uk.ac.shef.oak.com4510.model.Temperature;
 
 public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallback {
     private GoogleMap mMap;
     private Button mButtonStart;
     private Button mButtonEnd;
     private Barometer barometer;
+    private Temperature temperature;
     private Accelerometer accelerometer;
     private MyMap map;
     private Marker current_loc_marker;
@@ -46,6 +48,8 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
     private Polyline polyline;
     private String tripName;
     private Chronometer chronometer;
+    private TextView barometerValue;
+    private TextView temperatureValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +59,21 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
         chronometer=findViewById(R.id.chronometer);
         chronometer.setFormat("Time: %s");
 
+        barometerValue=findViewById(R.id.barometer_value);
+        temperatureValue=findViewById(R.id.temperature_value);
+
         Intent intent = getIntent();
         tripName = intent.getStringExtra("tripName");
 
         barometer= new Barometer(this);
         current_loc_marker = null;
         accelerometer= new Accelerometer(this, barometer);
+        temperature = new Temperature(this);
 
         TextView textView = findViewById(R.id.map_tripName);
         textView.setText(tripName);
+
+
 
         mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
         mapViewModel.getLocAndSensorDataLiveData().observe(this, new Observer<LocAndSensorData>() {
@@ -85,6 +95,10 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
                         else
                             polyline.setPoints(latLngs);
                     }
+                    if(temperature.getLatestValue() != -1000)
+                        temperatureValue.setText("Temperature: "+temperature.getLatestValue());
+                    if(barometer.getLatestValue() != -1000)
+                        barometerValue.setText("Barometer: "+barometer.getLatestValue());
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locAndSensorData.getLatitude(), locAndSensorData.getLongitude()), 16.0f));
                 }
             }
@@ -94,7 +108,7 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        map = new MyMap(this,tripName,barometer,mapViewModel);
+        map = new MyMap(this,tripName,barometer,temperature,mapViewModel);
 
         mButtonStart = (Button) findViewById(R.id.button_start);
         mButtonStart.setOnClickListener(new View.OnClickListener() {
@@ -102,10 +116,14 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
             public void onClick(View v) {
                 map.startLocationUpdates();
                 map.setStarted(true);
+                barometerValue.setText("");
+                temperatureValue.setText("");
                 chronometer.setBase(SystemClock.elapsedRealtime());
                 chronometer.start();
+                temperature.startTemperatureSensor();
 
                 accelerometer.startAccelerometerRecording();
+
                 if (mButtonEnd != null)
                     mButtonEnd.setEnabled(true);
                 mButtonStart.setEnabled(false);
@@ -120,6 +138,11 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
                 map.stopLocationUpdates();
                 map.setStarted(false);
                 accelerometer.stopAccelerometer();
+                temperature.stopTemperatureSensor();
+
+                barometerValue.setText("Start");
+                temperatureValue.setText("Record");
+
                 chronometer.stop();
                 if (mButtonStart != null)
                     mButtonStart.setEnabled(true);

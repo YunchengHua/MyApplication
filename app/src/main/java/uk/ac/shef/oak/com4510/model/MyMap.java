@@ -30,6 +30,7 @@ public class MyMap{
     private FusedLocationProviderClient mFusedLocationClient;
     private Context context;
     private Barometer barometer;
+    private Temperature temperature;
     private boolean started;
     private Location mCurrentLocation;
     private String mLastUpdateTime;
@@ -38,12 +39,13 @@ public class MyMap{
     private MapViewModel mapViewModel;
     private String tripName;
 
-    public MyMap(Context context,String tripName,Barometer barometer,MapViewModel mapViewModel){
+    public MyMap(Context context,String tripName,Barometer barometer,Temperature temperature,MapViewModel mapViewModel){
 
         this.context = context;
         this.barometer = barometer;
         this.mapViewModel = mapViewModel;
         this.tripName = tripName;
+        this.temperature = temperature;
         started = false;
         tripNumber = 0;
     }
@@ -103,7 +105,8 @@ public class MyMap{
                 latLngs.add(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                 Log.i("MAP", tripNumber+": new location " + mCurrentLocation.toString());
                 Log.i("BARMAP","Barometer"+barometer.toString());
-                LocAndSensorData l = new LocAndSensorData(barometer.getLatestValue(),barometer.getLatestAccuracy(),mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude(),tripNumber,tripName);
+                Log.i("TEMPMAP","Temperature"+temperature.toString());
+                LocAndSensorData l = new LocAndSensorData(temperature.getLatestValue(), barometer.getLatestValue(),barometer.getLatestAccuracy(),mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude(),tripNumber,tripName);
                 mapViewModel.insertOneData(l);
             }
         }
