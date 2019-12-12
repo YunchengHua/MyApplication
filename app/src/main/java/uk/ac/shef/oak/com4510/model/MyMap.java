@@ -36,12 +36,14 @@ public class MyMap{
     private ArrayList<LatLng> latLngs  = new ArrayList<LatLng>();
     private int tripNumber;
     private MapViewModel mapViewModel;
+    private String tripName;
 
-    public MyMap(Context context,Barometer barometer,MapViewModel mapViewModel){
+    public MyMap(Context context,String tripName,Barometer barometer,MapViewModel mapViewModel){
 
         this.context = context;
         this.barometer = barometer;
         this.mapViewModel = mapViewModel;
+        this.tripName = tripName;
         started = false;
         tripNumber = 0;
     }
@@ -101,7 +103,7 @@ public class MyMap{
                 latLngs.add(new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude()));
                 Log.i("MAP", tripNumber+": new location " + mCurrentLocation.toString());
                 Log.i("BARMAP","Barometer"+barometer.toString());
-                LocAndSensorData l = new LocAndSensorData(barometer.getLatestValue(),barometer.getLatestAccuracy(),mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude(),tripNumber);
+                LocAndSensorData l = new LocAndSensorData(barometer.getLatestValue(),barometer.getLatestAccuracy(),mCurrentLocation.getLatitude(),mCurrentLocation.getLongitude(),tripNumber,tripName);
                 mapViewModel.insertOneData(l);
             }
         }

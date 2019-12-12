@@ -2,11 +2,15 @@
 package uk.ac.shef.oak.com4510;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,14 +44,26 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
     private Marker current_loc_marker;
     private MapViewModel mapViewModel;
     private Polyline polyline;
+    private String tripName;
+    private Chronometer chronometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        chronometer=findViewById(R.id.chronometer);
+        chronometer.setFormat("Time: %s");
+
+        Intent intent = getIntent();
+        tripName = intent.getStringExtra("tripName");
+
         barometer= new Barometer(this);
         current_loc_marker = null;
         accelerometer= new Accelerometer(this, barometer);
+
+        TextView textView = findViewById(R.id.map_tripName);
+        textView.setText(tripName);
 
         mapViewModel = ViewModelProviders.of(this).get(MapViewModel.class);
         mapViewModel.getLocAndSensorDataLiveData().observe(this, new Observer<LocAndSensorData>() {
@@ -69,7 +85,7 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
                         else
                             polyline.setPoints(latLngs);
                     }
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locAndSensorData.getLatitude(), locAndSensorData.getLongitude()), 14.0f));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locAndSensorData.getLatitude(), locAndSensorData.getLongitude()), 16.0f));
                 }
             }
         });
@@ -78,7 +94,7 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        map = new MyMap(this,barometer,mapViewModel);
+        map = new MyMap(this,tripName,barometer,mapViewModel);
 
         mButtonStart = (Button) findViewById(R.id.button_start);
         mButtonStart.setOnClickListener(new View.OnClickListener() {
@@ -86,6 +102,8 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
             public void onClick(View v) {
                 map.startLocationUpdates();
                 map.setStarted(true);
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                chronometer.start();
 
                 accelerometer.startAccelerometerRecording();
                 if (mButtonEnd != null)
@@ -102,6 +120,7 @@ public class MapsActivity extends AppCompatActivity  implements OnMapReadyCallba
                 map.stopLocationUpdates();
                 map.setStarted(false);
                 accelerometer.stopAccelerometer();
+                chronometer.stop();
                 if (mButtonStart != null)
                     mButtonStart.setEnabled(true);
                 mButtonEnd.setEnabled(false);

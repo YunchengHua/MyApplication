@@ -1,58 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) 2018. This code has been developed by Fabio Ciravegna, The University of Sheffield. All rights reserved. No part of this code can be used without the explicit written permission by the author
-  -->
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     tools:context=".MapsActivity">
 
-
-    <LinearLayout xmlns:map="http://schemas.android.com/apk/res-auto"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center">
 
-        <fragment xmlns:map="http://schemas.android.com/apk/res-auto"
+        <LinearLayout
+            android:layout_below="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/map_tripName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_centerHorizontal="true"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:text="New Visit" />
+
+            <Chronometer
+                android:id="@+id/chronometer"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textSize="30sp"/>
+        </LinearLayout>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/map"
-            class="com.google.android.gms.maps.SupportMapFragment"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_below="@+id/chronometer"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"
-            android:scrollbars="vertical" />
-
+            tools:context=".MapsActivity" />
 
         <LinearLayout
+            android:layout_below="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="0pt"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
 
             <Button
                 android:id="@+id/button_start"
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="@null"
-                android:gravity="center"
-                android:scaleType="fitCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:text="Start" />
 
             <Button
                 android:id="@+id/button_end"
-                android:layout_width="0dp"
-                android:layout_height="35dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="@null"
-                android:gravity="center"
-                android:scaleType="fitCenter"
-                android:text="Stop" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Stop"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true" />
 
         </LinearLayout>
     </LinearLayout>
-
-</FrameLayout>
-
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/taking_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:src="@android:drawable/ic_menu_gallery" />
+</RelativeLayout>
