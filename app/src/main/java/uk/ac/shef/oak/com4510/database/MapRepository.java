@@ -1,4 +1,4 @@
-package uk.ac.shef.oak.com4510;
+package uk.ac.shef.oak.com4510.database;
 
 import android.app.Application;
 import android.os.AsyncTask;

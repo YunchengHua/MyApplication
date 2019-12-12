@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import uk.ac.shef.oak.com4510.database.LocAndSensorData;
+import uk.ac.shef.oak.com4510.database.MapRepository;
 
 public class MapViewModel extends AndroidViewModel {
     private final MapRepository mapRepository;
